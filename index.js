@@ -2,41 +2,49 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 
-const db = "";
+// 
+import morgan from "morgan";
+import dotenv from "dotenv";
+import { connectStateMsgs } from "./configMsgs/index.js";
+
+dotenv.config();
 
 mongoose
-    .connect(db, {
+    .connect(process.env.MONGO_URL, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })
     .then(async (response) => {
-        console.log("DB is OK");
+        console.log(connectStateMsgs.successMsg("DB is connected =>>>>>"));
     })
     .catch((error) => {
-        console.log("DB is Error");
+        console.log(connectStateMsgs.errorMsg("DB is Error =>>>>>", error));
     })
 
 const app = express();
 
-
+app.use(morgan(connectStateMsgs.requestMsg("Request =>>>>", 'Method - :method, URL -> :url, Status -> :status, Response -> :res[content-length] -> :response-time ms')));
 app.use(express.json());
 
 app.use(cors());
 
-// Here is API
+
+// Here is APIs
 app.get("/users", async (req, res) => {
-    console.log("request method =>>>>>>>", req.method);
     return res.status(500).json({
         message: "You're here"
     });
 })
 
 
-// END API
+// END APIs
 
-app.listen(7777, (error) => {
+
+
+
+app.listen(process.env.PORT, (error) => {
     if (error) {
-        return console.log(`Error Server =>>>>>>>`, error);
+        return console.log(connectStateMsgs.errorMsg("Error Server =>>>>>>>", error));
     };
-    return console.log("Server is OK");
+    return console.log(connectStateMsgs.successMsg("Server is OK"));
 })
