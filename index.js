@@ -7,6 +7,9 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import { connectStateMsgs } from "./configMsgs/index.js";
 
+import { UserController, OwnerController } from "./controllers/index.js";
+import { checkAuth, checkIsOwner } from "./utils/index.js";
+
 dotenv.config();
 
 mongoose
@@ -29,13 +32,14 @@ app.use(express.json());
 app.use(cors());
 
 
-// Here is APIs
-app.get("/users", async (req, res) => {
-    return res.status(500).json({
-        message: "You're here"
-    });
-})
+// Here are APIs
+app.post("/auth/register", UserController.register);
 
+app.post("/auth/signIN", UserController.signIN);
+
+app.get("/auth/me", checkAuth, UserController.getDataAboutMe);
+
+app.get("/users", checkIsOwner, OwnerController.getAll);
 
 // END APIs
 
