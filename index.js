@@ -8,7 +8,7 @@ import dotenv from "dotenv";
 import { connectStateMsgs } from "./configMsgs/index.js";
 
 import { UserController, OwnerController } from "./controllers/index.js";
-import { checkAuth, checkIsOwner } from "./utils/index.js";
+import { checkAuth } from "./utils/index.js";
 
 dotenv.config();
 
@@ -39,7 +39,7 @@ app.post("/auth/signIN", UserController.signIN);
 
 app.get("/auth/me", checkAuth, UserController.getDataAboutMe);
 
-app.get("/users", checkIsOwner, OwnerController.getAll);
+app.get("/users", checkAuth, OwnerController.getAll);
 
 // END APIs
 
