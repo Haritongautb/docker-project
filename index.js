@@ -8,7 +8,7 @@ import dotenv from "dotenv";
 import { connectStateMsgs } from "./configMsgs/index.js";
 
 import { UserController, OwnerController } from "./controllers/index.js";
-import { checkAuth } from "./utils/index.js";
+import { CheckAuth } from "./utils/index.js";
 
 dotenv.config();
 
@@ -33,13 +33,22 @@ app.use(cors());
 
 
 // Here are APIs
+
+// User's CRUD Post
 app.post("/auth/register", UserController.register);
-
 app.post("/auth/signIN", UserController.signIN);
+app.get("/auth/me", CheckAuth.checkIsUser, UserController.getDataAboutMe);
 
-app.get("/auth/me", checkAuth, UserController.getDataAboutMe);
+// 
 
-app.get("/users", checkAuth, OwnerController.getAll);
+// Owner's CRUD
+app.get("/users", CheckAuth.checkIsOwner, OwnerController.getAll);
+app.post("/users", CheckAuth.checkIsOwner, UserController.register);
+app.delete("/users/:id", CheckAuth.checkIsOwner, OwnerController.deleteUser);
+app.patch("/users/:id", CheckAuth.checkIsOwner, OwnerController.updateUser);
+// 
+
+
 
 // END APIs
 
