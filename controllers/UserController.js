@@ -4,6 +4,7 @@ import UserModel from "../models/User.js";
 import { connectStateMsgs } from "../configMsgs/index.js";
 
 
+
 export const register = async (req, res) => {
     try {
         const password = req.body.password;
@@ -136,3 +137,63 @@ export const getDataAboutAdmin = async (req, res) => {
         });
     }
 }
+
+export const removeMyAccount = async (req, res) => {
+    try {
+        const userDoc = await UserModel.findByIdAndDelete(req.body.userID);
+        if (!userDoc) {
+            return res.status(404).json({
+                message: "Couldn't remove your account. Something is wrong"
+            });
+        };
+
+        return res.json({
+            success: true
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Couldn't remove your account. Something is wrong"
+        });
+    }
+}
+
+export const updateMyAccount = async (req, res) => {
+    try {
+        const password = req.body.password;
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
+
+        const updatedDoc = await UserModel.findByIdAndUpdate(
+            {
+                _id: req.body.userID
+            },
+            {
+                email: req.body.email,
+                fullName: req.body.fullName,
+                avatarUrl: req.body.avatarUrl,
+                passwordHash: hash,
+                date: new Date(),
+            },
+            {
+                new: true
+            }
+        );
+
+        if (!updatedDoc) {
+            return res.status(404).json({
+                message: "Couldn't find post"
+            });
+        };
+
+        return res.json({
+            ...updatedDoc._doc,
+            success: true
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Couldn't find account"
+        });
+    }
+}   
