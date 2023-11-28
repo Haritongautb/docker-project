@@ -20,7 +20,8 @@ export const createPost = async (req, res) => {
         const doc = new PostModel({
             title: req.body.title,
             text: req.body.text,
-            user: req.body.userID
+            user: req.body.userID,
+            category: req.body.category
         });
 
         const post = await doc.save();
@@ -120,5 +121,34 @@ export const deletePost = async (req, res) => {
         return res.status(500).json({
             message: "Couldn't find post"
         })
+    }
+};
+
+export const toggleReaction = async (req, res) => {
+    const postId = req.params.id;
+    const reactionType = req.params.reaction;
+    const userId = req.body.userID;
+    try {
+        const post = await PostModel.findById(postId);
+
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+        const isUserReaction = post[`${reactionType}dBy`].includes(userId);
+
+        if (isUserReaction) {
+            post[`${reactionType}s`] -= 1;
+            post[`${reactionType}dBy`] = post[`${reactionType}dBy`].filter(id => id.toString() !== userId);
+        } else {
+            console.log("else");
+            post[`${reactionType}s`] += 1;
+            post[`${reactionType}dBy`].push(userId);
+        }
+
+        await post.save();
+
+        return res.json(post);
+    } catch (error) {
+        return res.status(500).json({ message: `Error ${reactionType}ing the post` });
     }
 };
