@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import paypal from "paypal-rest-sdk";
 import UserModel from "../models/User.js";
+import ReceiptModel from "../models/Receipt.js";
 import { connectStateMsgs } from "../configMsgs/index.js";
 
 
@@ -196,4 +198,82 @@ export const updateMyAccount = async (req, res) => {
             message: "Couldn't find account"
         });
     }
-}   
+}
+
+export const createSubscribe = async (req, res) => {
+    const { userID, amount, title } = req.body;
+
+    try {
+        const user = await UserModel.findById(userID);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        };
+
+        if (user.subscribed) {
+            return res.json({
+                message: "You're already subscribed"
+            });
+        };
+
+        paypal.payment.create({
+            "intent": "sale",
+            "payer": {
+                "payment_method": "paypal"
+            },
+            "redirect_urls": {
+                "return_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                "cancel_url": "https://i.redd.it/ser7dxmw2lr21.jpg"
+            },
+            "transactions": [{
+                "amount": {
+                    "currency": "USD",
+                    "total": amount
+                },
+                "description": `Payment for subscribe to news by ${user.fullName}`
+            }]
+        }, async function (error, payment) {
+            if (error) {
+                throw error;
+            } else {
+
+                const receipt = new ReceiptModel({
+                    title,
+                    user: userID,
+                    amount
+                });
+
+                const savedReceipt = await receipt.save();
+                user.subscribed = true;
+                user.receipts.push(savedReceipt._id);
+                await user.save();
+
+                return res.json({ approval_url: payment.links[0].href });
+            }
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Error creating subscription"
+        })
+    }
+}
+
+export const checkIsSuccess = async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.body.userID);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.subscribed = true;
+        await user.save();
+
+        return res.json({
+            redirectUrl: "/"
+        });
+    } catch (error) {
+        console.error('Error updating subscription status:', error);
+        res.status(500).json({ message: 'Error updating subscription status' });
+    }
+}

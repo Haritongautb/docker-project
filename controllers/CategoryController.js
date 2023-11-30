@@ -42,3 +42,16 @@ export const createCategories = async (req, res) => {
         })
     }
 }
+
+export const deleteAll = async (req, res) => {
+    try {
+        await CategoryModel.deleteMany({});
+        return res.json({
+            message: "All posts have been deleted"
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: "Something is wrong"
+        })
+    }
+}

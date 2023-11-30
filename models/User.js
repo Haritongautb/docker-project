@@ -19,7 +19,17 @@ const UserSchema = new mongoose.Schema({
         enum: ['admin', 'owner', 'user'],
         type: String,
         default: 'user'
-    }
+    },
+    subscribed: {
+        type: Boolean,
+        default: false
+    },
+    receipts: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Receipt"
+        }
+    ]
 }, {
     timestamps: true
 });
