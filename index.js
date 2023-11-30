@@ -8,7 +8,7 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import { connectStateMsgs } from "./configMsgs/index.js";
 
-import { UserController, OwnerController, PostController, CategoryController } from "./controllers/index.js";
+import { UserController, OwnerController, PostController, CategoryController, ReceiptController } from "./controllers/index.js";
 import { CheckAuth } from "./utils/index.js";
 // import PostModel from "./models/Post.js";
 
@@ -85,8 +85,7 @@ app.patch("/users/:id", CheckAuth.checkIsOwner, OwnerController.updateUser);
 // Categories
 app.get("/categories", CheckAuth.checkIsOwner, CategoryController.createCategories);
 app.delete("/categories/delete_all", CheckAuth.checkIsOwner, CategoryController.deleteAll);
-
-
+app.all("/receipts", CheckAuth.checkIsOwner, ReceiptController.handleReceipts);
 
 
 // END APIs

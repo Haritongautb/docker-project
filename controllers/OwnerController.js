@@ -1,4 +1,5 @@
 import UserModel from "../models/User.js";
+import ReceiptModel from "../models/Receipt.js";
 
 export const getAll = async (req, res) => {
     try {
