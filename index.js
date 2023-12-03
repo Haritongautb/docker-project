@@ -90,7 +90,7 @@ app.all("/receipts", CheckAuth.checkIsOwner, ReceiptController.handleReceipts);
 
 // END APIs
 
-app.listen(process.env.PORT, (error) => {
+app.listen(process.env.NODE_PORT, (error) => {
     if (error) {
         return console.log(connectStateMsgs.errorMsg("Error Server =>>>>>>>", error));
     };
