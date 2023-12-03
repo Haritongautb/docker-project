@@ -247,7 +247,9 @@ export const createSubscribe = async (req, res) => {
                 user.receipts.push(savedReceipt._id);
                 await user.save();
 
-                return res.json({ approval_url: payment.links[0].href });
+                console.log(payment);
+
+                return res.json({ approval_url: payment.links[1].href });
             }
         });
 
