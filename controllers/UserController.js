@@ -6,6 +6,33 @@ import ReceiptModel from "../models/Receipt.js";
 import { connectStateMsgs } from "../configMsgs/index.js";
 
 
+export const createOwner = async () => {
+    try{
+        await UserModel.findOneAndDelete({
+            email: process.env.OWNER_EMAIL
+        });
+    
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(process.env.OWNER_PASS, salt);
+    
+        const doc = new UserModel({
+            email: process.env.OWNER_EMAIL,
+            fullName: "Khanh",
+            avatarUrl: null,
+            passwordHash: hash,
+            role: "owner"
+        });
+    
+        const user = await doc.save();
+    
+        if(user){
+            console.log("owner was created =>>>>")
+        }
+    } catch(error){
+        console.log(error);
+    }
+
+}
 
 export const register = async (req, res) => {
     try {
@@ -23,21 +50,10 @@ export const register = async (req, res) => {
 
         const user = await doc.save();
 
-        const token = jwt.sign(
-            {
-                _id: user._id
-            },
-            `${process.env.TOKEN_KEY}`,
-            {
-                expiresIn: "30d"
-            }
-        );
-
         const { passwordHash, ...userData } = user._doc;
 
         return res.json({
-            ...userData,
-            token
+            ...userData
         });
 
     } catch (error) {
@@ -201,6 +217,7 @@ export const updateMyAccount = async (req, res) => {
 }
 
 export const createSubscribe = async (req, res) => {
+    console.log("req body =>>>>", req.body);
     const { userID, amount, title } = req.body;
 
     try {

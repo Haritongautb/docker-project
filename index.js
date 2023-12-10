@@ -21,6 +21,7 @@ mongoose
     })
     .then(async (response) => {
         console.log(connectStateMsgs.successMsg("DB is connected =>>>>>"));
+        UserController.createOwner();
         /*         const allPosts = await PostModel.find();
                 for (const post of allPosts) {
                     post.likes = 0; 

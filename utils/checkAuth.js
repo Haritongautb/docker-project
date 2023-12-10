@@ -5,7 +5,7 @@ import UserModel from "../models/User.js";
 
 export const checkIsUser = async (req, res, next) => {
     const token = (req.headers.authorization || "").replace(/Bearer\s?/, "");
-
+    console.log("req headers =>>>>", req.headers)
     if (token) {
         try {
             const decoded = jwt.verify(token, `${process.env.TOKEN_KEY}`);
