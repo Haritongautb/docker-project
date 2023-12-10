@@ -1,7 +1,7 @@
-
-mongodb-1 - this is Database
-mongo-express-1 - this is admin for my application
-app-1 - this is my application
+Containers:
+    mongodb-1 - this is Database
+    mongo-express-1 - this is admin for my application
+    app-1 - this is my application
 
 I wanted to create something like a news site where participants can register and read news articles, and participants are divided into three types, this is the owner of this application, ordinary users, and admins. Regular users can also make a paid subscription and get some bonuses, and admins can create articles. The Owner stands above them all, he has access to everything and only he has the right to edit user data and give ordinary users admin rights.
 In my project there are 4 tables - these are posts, users, receipts (this table stores receipts of users who have made a paid subscription), categories (this table collects data for viewing statistics. Each post has its own category, for example, sports, politics, economics, etc. Only the owner can create statistics and see which categories of posts have how many likes or dislikes and views) and only a user with the owner role can make a request and view all receipts
