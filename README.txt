@@ -30,7 +30,7 @@ POST http://localhost:3000/auth/signIN
 must have
 headers: {
     "content-type": "application/json"
-}
+}"
 body: {
     "email": "user's email",
     "password": "user's password"
@@ -44,7 +44,7 @@ GET - http://localhost:3000/auth/me
 must have
 headers: {
     "content-type": "application/json",
-    "authorization": "user's token"
+    "authorization": "Bearer user's token"
 }
 
 4. Patch data about user
@@ -52,7 +52,7 @@ PATCH - http://localhost:3000/auth/update_my_data/there should be a user token h
 
 headers: {
     "content-type": "application/json",
-    "authorization": "user's token"
+    "authorization": "Bearer user's token"
 }
 body: {
     What you want to change. There are three options that you can change
@@ -66,7 +66,7 @@ DELETE - http://localhost:3000/auth/remove_account/there should be a user token 
 
 headers: {
     "content-type": "application/json",
-    "authorization": "user's token"
+    "authorization": "Bearer user's token"
 }
 
 after successfully deleting the account, the user will receive the following message - { "success": true }
@@ -84,7 +84,7 @@ POST - http://localhost:3000/posts
 must have
 headers: {
     "content-type": "application/json",
-    "authorization": "user's token"
+    "authorization": "Bearer user's token"
 }
 body: {
     What you want to change. There are three options that you can change
@@ -99,7 +99,7 @@ PATCH - http://localhost:3000/posts/posts's id
 must have
 headers: {
     "content-type": "application/json",
-    "authorization": "user's token"
+    "authorization": "Bearer user's token"
 }
 body: {
     What you want to change. There are three options that you can change
@@ -114,7 +114,7 @@ DELETE - http://localhost:3000/posts/posts's id
 must have
 headers: {
     "content-type": "application/json",
-    "authorization": "user's token"
+    "authorization": "Bearer user's token"
 }
 
 5.Like and Dislike a post
@@ -124,7 +124,7 @@ PATCH - http://localhost:3000/posts/6574baa824a51d4c1c10f9fa/like or http://loca
 must have
 headers: {
     "content-type": "application/json",
-    "authorization": "user's token"
+    "authorization": "Bearer user's token"
 }
 
 III. Categories
@@ -134,7 +134,7 @@ GET - http://localhost:3000/categories
 must have
 headers: {
     "content-type": "application/json",
-    "authorization": "only user's role 'owner' token"
+    "authorization": "Bearer only user's role 'owner' token"
 }
 
 IV. Receipts
@@ -144,7 +144,7 @@ After payment, a receipt is created in the receipt table with the user's ID, the
 must have 
 headers: {
     "content-type": "application/json",
-    "authorization": "user's token"
+    "authorization": "Bearer user's token"
 }
 
 body: {
@@ -159,7 +159,7 @@ GET - http://localhost:3000/users/check_subscribe_is_success
 must have 
 headers: {
     "content-type": "application/json",
-    "authorization": "user's token"
+    "authorization": "Bearer user's token"
 }
 
 
