@@ -23,10 +23,11 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: $MONGODB_PASSWORD
       ME_CONFIG_MONGODB_URL: mongodb://$MONGODB_USER:$MONGODB_PASSWORD@mongodb:$MONGODB_PORT/
   app:
-    image: node:18
+    build: .
     restart: always
     volumes:
       - ./:/app
+      - node_modules:/app/node_modules
     working_dir: /app
     ports:
       - $NODE_PORT:$NODE_PORT
@@ -36,7 +37,7 @@ services:
       - DB_PASSWORD=$MONGODB_PASSWORD
       - DB_NAME=$MONGODB_DATABASE
       - DB_PORT=$MONGODB_PORT
-    command: ["npm", "start"]
+    command: npm start
     depends_on:
       - mongodb
     stdin_open: true
@@ -44,3 +45,4 @@ services:
 
 volumes:
   db:
+  node_modules:
